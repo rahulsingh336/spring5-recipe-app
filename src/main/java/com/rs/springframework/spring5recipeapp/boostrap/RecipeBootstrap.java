@@ -4,9 +4,11 @@ import com.rs.springframework.spring5recipeapp.domain.*;
 import com.rs.springframework.spring5recipeapp.repositories.CategoryRepository;
 import com.rs.springframework.spring5recipeapp.repositories.RecipeRepository;
 import com.rs.springframework.spring5recipeapp.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Optional;
 /**
  * Created by rs on 6/13/17.
  */
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -28,10 +31,21 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         this.recipeRepository = recipeRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
-
+    /*
+    * Reason for @Transactional
+    * org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role: com.rs.springframework.spring5recipeapp.domain.Category.recipes, could not initialize proxy - no Session
+	at org.hibernate.collection.internal.AbstractPersistentCollection.throwLazyInitializationException(AbstractPersistentCollection.java:582) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
+	at org.hibernate.collection.internal.AbstractPersistentCollection.withTemporarySessionIfNeeded(AbstractPersistentCollection.java:201) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
+	at org.hibernate.collection.internal.AbstractPersistentCollection.initialize(AbstractPersistentCollection.java:561) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
+	at org.hibernate.collection.internal.AbstractPersistentCollection.read(AbstractPersistentCollection.java:132) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
+	at org.hibernate.collection.internal.PersistentSet.hashCode(PersistentSet.java:430) ~[hibernate-core-5.2.12.Final.jar:5.2.12.Final]
+	at com.rs.springframework.spring5recipeapp.domain.Category.hashCode(Category.java:12) ~[classes/:na]
+    * */
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         recipeRepository.saveAll(getRecipes());
+        log.debug("Loading Bootstrap Data");
     }
 
     private List<Recipe> getRecipes() {
