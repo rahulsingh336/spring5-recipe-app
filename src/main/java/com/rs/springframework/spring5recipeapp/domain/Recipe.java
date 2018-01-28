@@ -34,6 +34,7 @@ public class Recipe {
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @Lob
+    //recommendation from hibernate to use wrapper
     private Byte[] image;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -50,11 +51,11 @@ public class Recipe {
             this.notes = notes;
             notes.setRecipe(this);
         }
-    }
+    }*/
 
     public Recipe addIngredient(Ingredient ingredient){
         ingredient.setRecipe(this);
         this.ingredients.add(ingredient);
         return this;
-    }*/
+    }
 }

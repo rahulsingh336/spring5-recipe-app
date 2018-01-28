@@ -7,7 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 /**
- * Created by E076103 on 1/25/2018.
+ * Created by rs on 1/25/2018.
  */
 @Component
 public class CategoryCommandToCategory implements Converter<CategoryCommand, Category>{
